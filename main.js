@@ -151,7 +151,7 @@ const sleepQualityStackedBaseSpec = {
             title: "Sleep quality",
             sort: ["Poor", "Fair", "Good", "Excellent"],
             scale: {
-                range: ["#614033", "#F0DEBB", "#BE9757", "#D26946"]
+                range: ["#362822", "#FAEDD6", "#F0C376", "#1A3447"]
             }
         },
 
@@ -244,7 +244,7 @@ const sleepQualityBaseSpec = {
                     type: "nominal",
                     sort: ["Poor", "Fair", "Good", "Excellent"],
                     scale: {
-                        range: ["#614033", "#F0DEBB", "#BE9757", "#D26946"]
+                        range: ["#362822", "#1A3447", "#F0C376", "#6E6E6E"]
                     },
                     legend: { title: "Sleep quality" }
                 }
@@ -810,7 +810,7 @@ const ageDistributionBaseSpec = {
                     "#F0C376", // coffee
                     "#F7ECD7", // cream
                     "#1A3447", // dark blue
-                    "#D26946"
+                    "#6E6E6E"
                 ]
             }
         },
@@ -1145,7 +1145,7 @@ const weekdayActivityBaseSpec = {
                         labels: false
                     }
                 },
-                color: { value: "#F0C376" }
+                color: { value: "#362822" }
             }
         },
 
