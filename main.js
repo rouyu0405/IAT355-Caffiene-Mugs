@@ -589,13 +589,15 @@ function renderCoffeeActivityByAgeSummary() {
     if (!container) return;
 
     let containerWidth = container.clientWidth || 800;
+
+    const breakpoint = 700;
+    const facetColumns = containerWidth < breakpoint ? 1 : 2;
+
     const maxWidth = 900;
     const totalWidth = Math.min(containerWidth, maxWidth);
 
-    const facetColumns = 2;
-    const gap = 24;
+    const gap = facetColumns > 1 ? 24 : 0;
     const perFacetWidth = (totalWidth - gap) / facetColumns;
-
 
     const baseAspect = 280 / 320;
     let perFacetHeight = perFacetWidth * baseAspect;
@@ -604,12 +606,9 @@ function renderCoffeeActivityByAgeSummary() {
     const maxHeight = 320;
     perFacetHeight = Math.max(minHeight, Math.min(perFacetHeight, maxHeight));
 
-
     const spec = JSON.parse(JSON.stringify(coffeeActivityByAgeSummaryBaseSpec));
 
-
     spec.columns = facetColumns;
-
 
     spec.spec.width = perFacetWidth;
     spec.spec.height = perFacetHeight;
@@ -618,12 +617,16 @@ function renderCoffeeActivityByAgeSummary() {
 }
 
 
+
 renderCoffeeActivityByAgeSummary();
 
 
 // Base spec without fixed width/height
 const coffeeReasonsBaseSpec = {
     $schema: "https://vega.github.io/schema/vega-lite/v5.json",
+
+    padding: { top: 10, right: 50, bottom: 10, left: 10 },
+    autosize: { type: "fit-x", contains: "padding" },
 
     data: {
         values: [
@@ -639,16 +642,12 @@ const coffeeReasonsBaseSpec = {
 
     transform: [
         {
-            // Create label text like "83.1%"
             calculate: "datum.Percent + '%'",
             as: "Percent_Label"
         }
     ],
 
-    // width and height will be added dynamically in renderCoffeeReasonsChart
-
     layer: [
-        // Bar layer
         {
             mark: {
                 type: "bar",
@@ -689,7 +688,6 @@ const coffeeReasonsBaseSpec = {
             }
         },
 
-        // Text labels layer (percent values on the right)
         {
             mark: {
                 type: "text",
@@ -706,7 +704,6 @@ const coffeeReasonsBaseSpec = {
                     field: "Reason",
                     type: "nominal",
                     sort: "-x"
-                    // Do not define axis here so it uses the bar layer axis styling
                 },
                 x: {
                     field: "Percent",
@@ -731,29 +728,24 @@ const coffeeReasonsBaseSpec = {
 };
 
 
+
 // Render function for responsive bar chart
 function renderCoffeeReasonsChart() {
     const container = document.getElementById("chart_coffee_reasons");
     if (!container) return;
 
-    // Get current container width
-    let containerWidth = container.clientWidth || 800;
-
-    // Limit max width similar to original 800px for readability
+    const containerWidth = container.clientWidth || 800;
     const maxWidth = 800;
     const chartWidth = Math.min(containerWidth, maxWidth);
 
-    // Original design: width = 800, height.step = 48
     const baseStep = 48;
     const scaleFactor = chartWidth / 800;
 
-    // Scale bar step with width, and clamp to a reasonable range
     let barStep = baseStep * scaleFactor;
     const minStep = 32;
     const maxStep = 64;
     barStep = Math.max(minStep, Math.min(barStep, maxStep));
 
-    // Build final spec with dynamic width and height.step
     const coffeeReasonsSpec = {
         ...coffeeReasonsBaseSpec,
         width: chartWidth,
@@ -762,6 +754,8 @@ function renderCoffeeReasonsChart() {
 
     vegaEmbed("#chart_coffee_reasons", coffeeReasonsSpec, { actions: false });
 }
+
+
 
 // Initial render
 renderCoffeeReasonsChart();
@@ -1089,6 +1083,9 @@ renderGenderCoffeeChart();
 const weekdayActivityBaseSpec = {
     $schema: "https://vega.github.io/schema/vega-lite/v5.json",
 
+    padding: { top: 10, right: 50, bottom: 10, left: 10 },
+    autosize: { type: "fit-x", contains: "padding" },
+
     data: {
         values: [
             { Activity: "Doom scroll your phone", Count: 29 },
@@ -1110,7 +1107,7 @@ const weekdayActivityBaseSpec = {
     ],
 
     layer: [
-        // Bar layer
+        // 柱子
         {
             mark: {
                 type: "bar",
@@ -1124,18 +1121,17 @@ const weekdayActivityBaseSpec = {
                     title: null,
                     axis: {
                         labelFont: "Calibri",
-                        labelFontSize: 20,      // will be overridden dynamically
+                        labelFontSize: 20,
                         labelFontWeight: "bold",
                         labelColor: "#4A2B18",
                         labelPadding: 15,
-                        labelLimit: 0           // no truncation
+                        labelLimit: 0
                     }
                 },
                 x: {
                     field: "Count",
                     type: "quantitative",
                     title: null,
-                    // Let Vega choose a nice domain so bars are not too long
                     scale: {
                         domain: [0, 40]
                     },
@@ -1145,11 +1141,11 @@ const weekdayActivityBaseSpec = {
                         labels: false
                     }
                 },
-                color: { value: "#362822" }
+                color: { value: "#F0C376" }  // 和上一个图同样的浅黄色
             }
         },
 
-        // Right-side labels (numbers at the end of bars)
+        // 右侧数字
         {
             mark: {
                 type: "text",
@@ -1157,7 +1153,7 @@ const weekdayActivityBaseSpec = {
                 baseline: "middle",
                 dx: 5,
                 font: "Calibri",
-                fontSize: 16,                // will be overridden dynamically
+                fontSize: 16,
                 fontWeight: "bold",
                 color: "#362822"
             },
@@ -1180,43 +1176,43 @@ const weekdayActivityBaseSpec = {
 };
 
 
+
 // Render function for responsive weekday activity chart
 function renderWeekdayActivityChart() {
     const container = document.getElementById("weekdayActivityChart");
     if (!container) return;
 
-    // Use actual container width
-    let containerWidth = container.clientWidth || 520;
+    const containerWidth = container.clientWidth || 800;
+    const maxWidth = 800;
+    const chartWidth = Math.min(containerWidth, maxWidth);
 
-    const baseWidth = 520;
-    const baseStep = 40;          // slightly tighter than 48
-    const chartWidth = containerWidth;
+    const baseWidth = 800;
+    const baseStep = 40;
     const scaleFactor = chartWidth / baseWidth;
 
-    // Scale row step with width, within a reasonable range
+
     let barStep = baseStep * scaleFactor;
     const minStep = 28;
     const maxStep = 60;
     barStep = Math.max(minStep, Math.min(barStep, maxStep));
 
-    // Dynamic font sizes so text also reacts to width
-    const axisFontSize = Math.max(12, Math.min(20, 20 * scaleFactor));   // y-axis labels
-    const labelFontSize = Math.max(12, Math.min(18, 16 * scaleFactor));  // right-side numbers
 
-    // Build final spec with dynamic width and height
+    const axisFontSize = Math.max(12, Math.min(20, 20 * scaleFactor));
+    const labelFontSize = Math.max(12, Math.min(18, 16 * scaleFactor));
+
     const weekdayActivitySpec = {
         ...weekdayActivityBaseSpec,
         width: chartWidth,
         height: { step: barStep }
     };
 
-    // Override y-axis font size
+
     weekdayActivitySpec.layer[0].encoding.y.axis = {
         ...weekdayActivitySpec.layer[0].encoding.y.axis,
         labelFontSize: axisFontSize
     };
 
-    // Override right-side label font size
+
     weekdayActivitySpec.layer[1].mark = {
         ...weekdayActivitySpec.layer[1].mark,
         fontSize: labelFontSize
@@ -1224,6 +1220,7 @@ function renderWeekdayActivityChart() {
 
     vegaEmbed("#weekdayActivityChart", weekdayActivitySpec, { actions: false });
 }
+
 
 // Initial render
 renderWeekdayActivityChart();
@@ -1403,7 +1400,7 @@ class TestimonialCarousel {
         // Layout
         this.windowSize = 5; // Keep odd number for center
         this.middleIndex = Math.floor(this.windowSize / 2);
-        this.beanWidth = 56; 
+        this.beanWidth = 56;
 
         // Timer
         this.autoRotateTimer = null;
@@ -1431,22 +1428,22 @@ class TestimonialCarousel {
 
         for (let i = 0; i < this.windowSize; i++) {
             const realIndex = this.wrap(this.currentIndex - this.middleIndex + i);
-            
+
             const bean = document.createElement("img");
             const isCenter = i === this.middleIndex;
 
             bean.src = isCenter ? this.beanActive : this.beanDefault;
             bean.className = `bean-base ${isCenter ? "bean-center" : ""}`;
-            
+
             // Interaction
             bean.onclick = () => {
                 if (this.isAnimating || i === this.middleIndex) return;
-                
+
                 // if i < middle, we go left (prev). if i > middle, we go right (next)
                 const direction = i < this.middleIndex ? "left" : "right";
-                
+
                 const steps = Math.abs(i - this.middleIndex);
-                
+
                 this.transitionTo(direction, steps);
             };
 
@@ -1465,7 +1462,7 @@ class TestimonialCarousel {
 
 
         const offset = direction === "right" ? -this.beanWidth : this.beanWidth;
-        
+
         // Apply transform to container
         this.beanRow.style.transform = `translateX(${offset * steps}px)`;
 
@@ -1477,7 +1474,7 @@ class TestimonialCarousel {
 
         // Add center to the target
         const nextVisualIndex = direction === "right" ? this.middleIndex + 1 : this.middleIndex - 1;
-        if(beans[nextVisualIndex]) {
+        if (beans[nextVisualIndex]) {
             beans[nextVisualIndex].classList.add("bean-center");
             beans[nextVisualIndex].src = this.beanActive;
         }
@@ -1492,13 +1489,13 @@ class TestimonialCarousel {
 
             this.beanRow.style.transition = "none";
             this.beanRow.style.transform = "translateX(0)";
-            
+
             // Re-render DOM in new order
             this.renderBeans();
             this.updateTestimonyText(); // Change text content
 
             // Force browser repaint
-            void this.beanRow.offsetWidth; 
+            void this.beanRow.offsetWidth;
 
             // Re-enable transitions for next time
             this.beanRow.style.transition = "";
@@ -1561,7 +1558,7 @@ class TestimonialCarousel {
                 this.testimonials = lines.map(line => {
                     const cols = line.split(",");
                     const obj = {};
-                    
+
                     headers.forEach((header, index) => {
                         obj[header] = (cols[index] || "").trim();
                     });
