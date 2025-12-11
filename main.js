@@ -469,7 +469,6 @@ const stressCoffeeBaseSpec = {
                     legend: null
                 },
                 tooltip: [
-                    { field: "Stress_Level", type: "nominal", title: "Stress level" },
                     { field: "Coffee_Intake", type: "quantitative", format: ".1f", title: "Coffee intake (cups/day)" },
                     { field: "Age", type: "quantitative" },
                     { field: "Gender", type: "nominal" }
@@ -1078,8 +1077,6 @@ renderGenderCoffeeChart();
 
 
 // Weekday Activities Frequency Bar Chart
-
-// Base spec for weekday activity chart (no fixed width/height here)
 const weekdayActivityBaseSpec = {
     $schema: "https://vega.github.io/schema/vega-lite/v5.json",
 
@@ -1107,7 +1104,6 @@ const weekdayActivityBaseSpec = {
     ],
 
     layer: [
-        // 柱子
         {
             mark: {
                 type: "bar",
@@ -1141,11 +1137,15 @@ const weekdayActivityBaseSpec = {
                         labels: false
                     }
                 },
-                color: { value: "#F0C376" }  // 和上一个图同样的浅黄色
+                color: { value: "#F0C376" },
+
+                tooltip: [
+                    { field: "Activity", title: "Activity" },
+                    { field: "Count", title: "Count" }
+                ]
             }
         },
 
-        // 右侧数字
         {
             mark: {
                 type: "text",
@@ -1160,7 +1160,12 @@ const weekdayActivityBaseSpec = {
             encoding: {
                 y: { field: "Activity", type: "nominal", sort: "-x" },
                 x: { field: "Count", type: "quantitative" },
-                text: { field: "Count_Label" }
+                text: { field: "Count_Label" },
+
+                tooltip: [
+                    { field: "Activity", title: "Activity" },
+                    { field: "Count", title: "Count" }
+                ]
             }
         }
     ],
@@ -1174,6 +1179,7 @@ const weekdayActivityBaseSpec = {
         }
     }
 };
+
 
 
 
