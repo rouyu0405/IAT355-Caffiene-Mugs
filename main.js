@@ -1,4 +1,5 @@
-
+//Scroll Active Highlighter
+// Map sections → nav items
 const navItems = document.querySelectorAll("#sideNav .nav-item");
 
 const sectionObserver = new IntersectionObserver(
@@ -23,16 +24,17 @@ const sectionObserver = new IntersectionObserver(
         });
     },
     {
-        threshold: 0.2
+        threshold: 0.2 // Adjust page length sestivity
     }
 );
 
+// Observe each section
 document.querySelectorAll("section[id]").forEach((sec) => {
     sectionObserver.observe(sec);
 });
 
 
-
+// Base spec without fixed width/height
 const baseSpec = {
     data: { url: "caffeine.csv" },
     mark: "circle",
@@ -98,7 +100,7 @@ function renderSleepHourChart() {
     const containerWidth = container.clientWidth || 600;
 
     // Set an aspect ratio for height
-    const aspectRatio = 0.6;
+    const aspectRatio = 0.6; // height = 60% of width
     let chartHeight = containerWidth * aspectRatio;
 
     // Optional: clamp min/max height
@@ -245,11 +247,7 @@ const sleepQualityBaseSpec = {
                         range: ["#362822", "#1A3447", "#F0C376", "#6E6E6E"]
                     },
                     legend: { title: "Sleep quality" }
-                },
-                tooltip: [
-                    { field: "Sleep_Quality", title: "Sleep quality" },
-                    { field: "Caffeine_mg", title: "Caffeine (mg)" }
-                ]
+                }
             }
         },
 
@@ -622,6 +620,7 @@ function renderCoffeeActivityByAgeSummary() {
 renderCoffeeActivityByAgeSummary();
 
 
+// Base spec without fixed width/height
 const coffeeReasonsBaseSpec = {
     $schema: "https://vega.github.io/schema/vega-lite/v5.json",
 
@@ -761,6 +760,8 @@ function renderCoffeeReasonsChart() {
 renderCoffeeReasonsChart();
 
 
+//Data from our survey
+// Base spec for Age distribution donut chart
 const ageDistributionBaseSpec = {
     $schema: "https://vega.github.io/schema/vega-lite/v5.json",
 
@@ -768,25 +769,30 @@ const ageDistributionBaseSpec = {
         url: "Responses.csv"
     },
 
-
+    // Create a clean field name without quotes for age
     transform: [
         {
+            // Copy the original column "What's your age?" into a new field "AgeGroup"
             calculate: "datum['What\\'s your age?']",
             as: "AgeGroup"
         }
     ],
 
+    // width / height / radius will be added in renderAgeChart
 
     mark: {
         type: "arc"
+        // innerRadius and outerRadius will be set dynamically
     },
 
     encoding: {
+        // Use count of records for angle (no field needed for count)
         theta: {
             aggregate: "count",
             type: "quantitative"
         },
 
+        // Color by the new clean field "AgeGroup"
         color: {
             field: "AgeGroup",
             type: "nominal",
@@ -802,6 +808,7 @@ const ageDistributionBaseSpec = {
             }
         },
 
+        // Tooltip for interaction
         tooltip: [
             { field: "AgeGroup", title: "Age Group" },
             { aggregate: "count", title: "Count" }
@@ -809,38 +816,39 @@ const ageDistributionBaseSpec = {
     }
 };
 
-
+// Render age donut chart (responsive)
 function renderAgeChart() {
     const container = document.getElementById("ageChart");
     if (!container) return;
 
-
+    // Get container width
     let containerWidth = container.clientWidth || 320;
 
-
+    // Limit max width similar to original
     const maxWidth = 320;
     const chartWidth = Math.min(containerWidth, maxWidth);
 
-
+    // Make the chart square
     const chartHeight = chartWidth;
 
-
+    // Base radii used in the original design
     const baseWidth = 320;
     const baseOuterRadius = 140;
     const baseInnerRadius = 70;
 
-
+    // Scale radii with width
     const scaleFactor = chartWidth / baseWidth;
     let outerRadius = baseOuterRadius * scaleFactor;
     let innerRadius = baseInnerRadius * scaleFactor;
 
-
+    // Ensure the donut fits inside the chart (a little padding)
     const maxRadius = chartWidth / 2 - 5;
     if (outerRadius > maxRadius) {
         outerRadius = maxRadius;
         innerRadius = outerRadius / 2;
     }
 
+    // Build final spec with dynamic size and radii
     const ageDistributionSpec = {
         ...ageDistributionBaseSpec,
         width: chartWidth,
@@ -859,6 +867,7 @@ function renderAgeChart() {
 renderAgeChart();
 
 
+// Gender Distribution Pie Chart (Using Project Theme Colors)
 const genderDistributionBaseSpec = {
     $schema: "https://vega.github.io/schema/vega-lite/v5.json",
 
@@ -874,26 +883,30 @@ const genderDistributionBaseSpec = {
         }
     ],
 
+    // width / height / radius will be added in renderGenderChart
 
     mark: {
         type: "arc"
+        // innerRadius and outerRadius will be set dynamically
     },
 
     encoding: {
+        // Use count of records for angle
         theta: {
             aggregate: "count",
             type: "quantitative"
         },
 
+        // Color by gender, matching project palette
         color: {
             field: "Gender",
             type: "nominal",
             title: "Gender",
             scale: {
                 range: [
-                    "#362822",
-                    "#F0C376",
-                    "#F7ECD7"
+                    "#362822", // espresso
+                    "#F0C376", // coffee
+                    "#F7ECD7"  // cream (for other / prefer not to say)
                 ]
             }
         },
@@ -905,39 +918,39 @@ const genderDistributionBaseSpec = {
     }
 };
 
-
+// Render gender donut chart (responsive)
 function renderGenderChart() {
     const container = document.getElementById("genderChart");
     if (!container) return;
 
-
+    // Get container width
     let containerWidth = container.clientWidth || 320;
 
-
+    // Limit max width similar to original
     const maxWidth = 320;
     const chartWidth = Math.min(containerWidth, maxWidth);
 
-
+    // Make the chart square
     const chartHeight = chartWidth;
 
-
+    // Base radii used in the original design
     const baseWidth = 320;
     const baseOuterRadius = 140;
     const baseInnerRadius = 70;
 
-
+    // Scale radii with width
     const scaleFactor = chartWidth / baseWidth;
     let outerRadius = baseOuterRadius * scaleFactor;
     let innerRadius = baseInnerRadius * scaleFactor;
 
-
+    // Ensure the donut fits inside the chart (a little padding)
     const maxRadius = chartWidth / 2 - 5;
     if (outerRadius > maxRadius) {
         outerRadius = maxRadius;
         innerRadius = outerRadius / 2;
     }
 
-
+    // Build final spec with dynamic size and radii
     const genderDistributionSpec = {
         ...genderDistributionBaseSpec,
         width: chartWidth,
@@ -952,7 +965,7 @@ function renderGenderChart() {
     vegaEmbed("#genderChart", genderDistributionSpec, { actions: false });
 }
 
-
+// Initial render
 renderGenderChart();
 
 
@@ -981,6 +994,7 @@ const genderCoffeeBaseSpec = {
         }
     ],
 
+    // width and height will be added dynamically in renderGenderCoffeeChart
 
     mark: {
         type: "boxplot",
@@ -1006,14 +1020,15 @@ const genderCoffeeBaseSpec = {
             title: "Daily coffee intake (cups)"
         },
 
+        // Color by gender using project palette
         color: {
             field: "Gender",
             type: "nominal",
             scale: {
                 range: [
-                    "#362822",
-                    "#F0C376",
-                    "#F7ECD7"
+                    "#362822", // espresso
+                    "#F0C376", // coffee
+                    "#F7ECD7"  // cream
                 ]
             },
             legend: { title: "Gender" }
@@ -1026,26 +1041,28 @@ const genderCoffeeBaseSpec = {
     }
 };
 
-
+// Render Gender vs Coffee chart (responsive)
+// Render Gender vs Coffee chart (responsive, width and height scale together)
 function renderGenderCoffeeChart() {
     const container = document.getElementById("genderCoffeeChart");
     if (!container) return;
 
+    // Get current container width
     let containerWidth = container.clientWidth || 420;
 
-
+    // Allow the chart to grow up to maxWidth
     const maxWidth = 600;
     const chartWidth = Math.min(containerWidth, maxWidth);
 
-
+    // Base design size
     const baseWidth = 420;
     const baseHeight = 320;
 
-
+    // Keep the same aspect ratio as the base chart
     const scaleFactor = chartWidth / baseWidth;
-    const chartHeight = baseHeight * scaleFactor;
+    const chartHeight = baseHeight * scaleFactor;   // height scales with width
 
-
+    // Build final spec with dynamic width and height
     const genderCoffeeSpec = {
         ...genderCoffeeBaseSpec,
         width: chartWidth,
@@ -1055,7 +1072,7 @@ function renderGenderCoffeeChart() {
     vegaEmbed("#genderCoffeeChart", genderCoffeeSpec, { actions: false });
 }
 
-
+// Initial render
 renderGenderCoffeeChart();
 
 
@@ -1102,7 +1119,7 @@ const weekdayActivityBaseSpec = {
                         labelFont: "Calibri",
                         labelFontSize: 20,
                         labelFontWeight: "bold",
-                        labelColor: "#362822",
+                        labelColor: "#4A2B18",
                         labelPadding: 15,
                         labelLimit: 0
                     }
@@ -1211,37 +1228,39 @@ function renderWeekdayActivityChart() {
 }
 
 
+// Initial render
 renderWeekdayActivityChart();
 
 
 
+// Base spec for Coffee vs Sleep Duration (mean ± stdev)
 const coffeeSleepMeanBaseSpec = {
     $schema: "https://vega.github.io/schema/vega-lite/v5.json",
 
     data: { url: "Responses.csv" },
 
     transform: [
-
+        // Parse coffee cups into a numeric field
         {
             calculate: "toNumber(datum['How many cups of coffee do you normally drink in a day? (1 cup ~ 300mL)'])",
             as: "CoffeeCups"
         },
         {
-
+            // Keep only valid numeric values for coffee cups
             filter: "isValid(datum.CoffeeCups) && !isNaN(datum.CoffeeCups)"
         },
 
-
+        // Parse sleep time as a date on a fixed day
         {
             calculate: "toDate('2000-01-01 ' + datum['What time do you typically sleep on a weekday?'])",
             as: "SleepTime"
         },
-
+        // Parse wake time as a date on the next day
         {
             calculate: "toDate('2000-01-02 ' + datum['What time do you typically wake up on a weekday?'])",
             as: "WakeTime"
         },
-
+        // Compute sleep duration in hours
         {
             calculate:
                 "((hours(datum.WakeTime) * 60 + minutes(datum.WakeTime)) - " +
@@ -1249,21 +1268,22 @@ const coffeeSleepMeanBaseSpec = {
             as: "SleepDurationHours"
         },
         {
-
+            // Filter out unrealistic sleep durations
             filter: "datum.SleepDurationHours > 0 && datum.SleepDurationHours < 16"
         }
     ],
 
+    // width and height will be added dynamically in renderCoffeeSleepMeanChart
 
     layer: [
-
+        // Error bars (mean ± stdev)
         {
             mark: {
                 type: "errorbar",
                 ticks: true,
                 rule: true,
                 color: "#362822"
-
+                // with ordinal x, the horizontal ticks will span the band width
             },
             encoding: {
                 x: {
@@ -1272,12 +1292,12 @@ const coffeeSleepMeanBaseSpec = {
                     sort: "ascending",
                     title: "Daily coffee intake (cups)",
                     axis: {
-                        labelAngle: 0,
+                        labelAngle: 0,            // keep labels horizontal
                         labelFontSize: 13,
                         labelColor: "#4A2B18"
                     },
                     scale: {
-                        paddingInner: 0.3,
+                        paddingInner: 0.3,        // control spacing between categories
                         paddingOuter: 0.2
                     }
                 },
@@ -1334,22 +1354,27 @@ const coffeeSleepMeanBaseSpec = {
     }
 };
 
-
+// Render function for responsive Coffee vs Sleep chart (proportional width/height)
 function renderCoffeeSleepMeanChart() {
     const container = document.getElementById("coffeeSleepMeanChart");
     if (!container) return;
 
+    // Get current container width
     let containerWidth = container.clientWidth || 520;
 
+    // Allow chart to grow up to a larger maximum width if needed
     const maxWidth = 600;
     const chartWidth = Math.min(containerWidth, maxWidth);
 
+    // Base design dimensions
     const baseWidth = 520;
     const baseHeight = 320;
 
+    // Keep consistent aspect ratio by scaling height with width
     const scaleFactor = chartWidth / baseWidth;
     const chartHeight = baseHeight * scaleFactor;
 
+    // Build final spec with dynamic width and height
     const coffeeSleepMeanSpec = {
         ...coffeeSleepMeanBaseSpec,
         width: chartWidth,
@@ -1360,6 +1385,7 @@ function renderCoffeeSleepMeanChart() {
 }
 
 
+// Initial render
 renderCoffeeSleepMeanChart();
 
 
@@ -1590,4 +1616,3 @@ window.addEventListener("resize", () => {
         renderAgeChart();
     }, 200);
 });
-
