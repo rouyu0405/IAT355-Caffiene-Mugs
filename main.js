@@ -660,7 +660,7 @@ const coffeeReasonsBaseSpec = {
                     title: null,
                     axis: {
                         labelFont: "Calibri",
-                        labelFontSize: 20,
+                        labelFontSize: 24,
                         labelFontWeight: "bold",
                         labelColor: "#4A2B18",
                         labelPadding: 15,
@@ -694,7 +694,7 @@ const coffeeReasonsBaseSpec = {
                 baseline: "middle",
                 dx: 5,
                 font: "Calibri",
-                fontSize: 16,
+                fontSize: 24,
                 fontWeight: "bold",
                 color: "#362822"
             },
@@ -1117,7 +1117,7 @@ const weekdayActivityBaseSpec = {
                     title: null,
                     axis: {
                         labelFont: "Calibri",
-                        labelFontSize: 20,
+                        labelFontSize: 24,
                         labelFontWeight: "bold",
                         labelColor: "#4A2B18",
                         labelPadding: 15,
@@ -1153,7 +1153,7 @@ const weekdayActivityBaseSpec = {
                 baseline: "middle",
                 dx: 5,
                 font: "Calibri",
-                fontSize: 16,
+                fontSize: 24,
                 fontWeight: "bold",
                 color: "#362822"
             },
@@ -1203,8 +1203,8 @@ function renderWeekdayActivityChart() {
     barStep = Math.max(minStep, Math.min(barStep, maxStep));
 
 
-    const axisFontSize = Math.max(12, Math.min(20, 20 * scaleFactor));
-    const labelFontSize = Math.max(12, Math.min(18, 16 * scaleFactor));
+    const axisFontSize = Math.max(12, Math.min(24, 24 * scaleFactor));
+    const labelFontSize = Math.max(12, Math.min(24, 16 * scaleFactor));
 
     const weekdayActivitySpec = {
         ...weekdayActivityBaseSpec,
@@ -1293,7 +1293,7 @@ const coffeeSleepMeanBaseSpec = {
                     title: "Daily coffee intake (cups)",
                     axis: {
                         labelAngle: 0,            // keep labels horizontal
-                        labelFontSize: 13,
+                        labelFontSize: 24,
                         labelColor: "#4A2B18"
                     },
                     scale: {
@@ -1306,7 +1306,7 @@ const coffeeSleepMeanBaseSpec = {
                     type: "quantitative",
                     aggregate: "mean",
                     title: "Sleep duration (hours)",
-                    axis: { labelFontSize: 13, labelColor: "#4A2B18" }
+                    axis: { labelFontSize: 24, labelColor: "#4A2B18" }
                 }
             }
         },
