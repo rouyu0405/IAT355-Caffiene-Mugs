@@ -33,8 +33,36 @@ document.querySelectorAll("section[id]").forEach((sec) => {
     sectionObserver.observe(sec);
 });
 
+//Ajust font size
+const GLOBAL_VEGA_CONFIG = {
+    axis: {
+        labelFontSize: 16,
+        titleFontSize: 18
+    },
+    legend: {
+        labelFontSize: 16,
+        titleFontSize: 18
+    },
+    header: {
+        labelFontSize: 16,
+        titleFontSize: 18
+    },
+    title: {
+        fontSize: 18
+    }
+};
 
-// Base spec without fixed width/height
+function withGlobalConfig(spec) {
+    return {
+        ...spec,
+        config: {
+            ...GLOBAL_VEGA_CONFIG,
+            ...(spec.config || {})
+        }
+    };
+}
+
+
 const baseSpec = {
     data: { url: "caffeine.csv" },
     mark: "circle",
@@ -114,7 +142,7 @@ function renderSleepHourChart() {
     };
 
     // Embed chart
-    vegaEmbed("#sleepHours", spec, { actions: false });
+    vegaEmbed("#sleepHours", withGlobalConfig(spec), { actions: false });
 }
 
 // Initial render
@@ -197,7 +225,7 @@ function renderSleepQualityStackedChart() {
         height: chartHeight
     };
 
-    vegaEmbed("#sleepQuality", sleepQualityStackedSpec, { actions: false });
+    vegaEmbed("#sleepQuality", withGlobalConfig(sleepQualityStackedSpec), { actions: false });
 }
 
 
@@ -325,7 +353,7 @@ function renderSleepQualityChart() {
         });
     }
 
-    vegaEmbed("#sleepQualityScatter", sleepQualityJitterSpec, { actions: false });
+    vegaEmbed("#sleepQualityScatter", withGlobalConfig(sleepQualityJitterSpec), { actions: false });
 }
 
 
@@ -397,7 +425,7 @@ const coffeeByAgeSpec = {
     }
 };
 
-vegaEmbed("#coffeeByAge", coffeeByAgeSpec);
+vegaEmbed("#coffeeByAge", withGlobalConfig(coffeeByAgeSpec));
 
 
 
@@ -496,7 +524,7 @@ function renderStressCoffeeChart() {
     stressCoffeeSpec.width = chartWidth;
     stressCoffeeSpec.height = chartHeight;
 
-    vegaEmbed("#stressCoffee", stressCoffeeSpec, { actions: false });
+    vegaEmbed("#stressCoffee", withGlobalConfig(stressCoffeeSpec), { actions: false });
 }
 renderStressCoffeeChart();
 
@@ -612,7 +640,7 @@ function renderCoffeeActivityByAgeSummary() {
     spec.spec.width = perFacetWidth;
     spec.spec.height = perFacetHeight;
 
-    vegaEmbed("#coffeeActivityByAgeSummary", spec, { actions: false });
+    vegaEmbed("#coffeeActivityByAgeSummary", withGlobalConfig(spec), { actions: false });
 }
 
 
@@ -751,7 +779,7 @@ function renderCoffeeReasonsChart() {
         height: { step: barStep }
     };
 
-    vegaEmbed("#chart_coffee_reasons", coffeeReasonsSpec, { actions: false });
+    vegaEmbed("#chart_coffee_reasons", withGlobalConfig(coffeeReasonsSpec), { actions: false });
 }
 
 
@@ -860,7 +888,7 @@ function renderAgeChart() {
         }
     };
 
-    vegaEmbed("#ageChart", ageDistributionSpec, { actions: false });
+    vegaEmbed("#ageChart", withGlobalConfig(ageDistributionSpec), { actions: false });
 }
 
 // Initial render
@@ -962,7 +990,7 @@ function renderGenderChart() {
         }
     };
 
-    vegaEmbed("#genderChart", genderDistributionSpec, { actions: false });
+    vegaEmbed("#genderChart", withGlobalConfig(genderDistributionSpec), { actions: false });
 }
 
 // Initial render
@@ -1069,7 +1097,7 @@ function renderGenderCoffeeChart() {
         height: chartHeight
     };
 
-    vegaEmbed("#genderCoffeeChart", genderCoffeeSpec, { actions: false });
+    vegaEmbed("#genderCoffeeChart", withGlobalConfig(genderCoffeeSpec), { actions: false });
 }
 
 // Initial render
@@ -1224,7 +1252,7 @@ function renderWeekdayActivityChart() {
         fontSize: labelFontSize
     };
 
-    vegaEmbed("#weekdayActivityChart", weekdayActivitySpec, { actions: false });
+    vegaEmbed("#weekdayActivityChart", withGlobalConfig(weekdayActivitySpec), { actions: false });
 }
 
 
@@ -1381,7 +1409,7 @@ function renderCoffeeSleepMeanChart() {
         height: chartHeight
     };
 
-    vegaEmbed("#coffeeSleepMeanChart", coffeeSleepMeanSpec, { actions: false });
+    vegaEmbed("#coffeeSleepMeanChart", withGlobalConfig(coffeeSleepMeanSpec), { actions: false });
 }
 
 
